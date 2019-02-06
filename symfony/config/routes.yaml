@@ -1,0 +1,13 @@
+# config/routes.yaml
+
+# blog_list:
+#   path: /blog/{page}
+#   controller: App\Controller\BlogController::list
+#   defaults:
+#     page: 2
+#   requirements:
+#     page: '\d+'
+
+# blog_show:
+#   path: /blog/{slug}
+#   controller: App\Controller\BlogController::show
