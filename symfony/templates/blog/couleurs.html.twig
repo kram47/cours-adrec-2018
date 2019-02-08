@@ -1,0 +1,42 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+    Couleurs
+{% endblock %}
+
+
+{% block body %}
+
+    <h1>coucou les copains</h1>
+
+    <p>
+        salut {{name | upper}} comment ça va ?
+    </p>
+
+    <p>
+        ha mais attends ! t'as {{age}} ans en fait??
+    </p>
+
+    <ul>
+        {% for couleur in couleurList %}
+            <li> {{ couleur }} </li>
+        {% endfor %}
+    </ul>
+
+
+    <p>{{couleurString}}</p>
+    <ul>
+        {% for couleur in couleurString|split(",") %}
+            <li> {{ couleur }} </li>
+        {% endfor %}
+    </ul>
+
+
+    {% if age >= 18 %}
+        <h3> Tu es majeur ! </h3>
+    {% else %}
+        <h3> Tu es mineur ! </h3>
+    {% endif %}
+
+
+{% endblock %}

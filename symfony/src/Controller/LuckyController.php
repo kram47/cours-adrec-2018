@@ -13,6 +13,7 @@ namespace App\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class LuckyController extends AbstractController
 {
@@ -27,6 +28,13 @@ class LuckyController extends AbstractController
         return $this->render("lucky/number.html.twig", [
             "poil" => $number
         ]);
+    }
+
+    /**
+     * @Route("/lucky/session", name="lucky_session")
+     */
+    public function session(SessionInterface $session) {
+        return new Response("<h1>{$session->get('pouet', '')}</h1>");
     }
 
 }

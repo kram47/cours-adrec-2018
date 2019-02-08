@@ -4,8 +4,8 @@
 /**
  * @Author: OMAO
  * @Date:   2019-02-01 16:50:01
- * @Last Modified by:   OMAO
- * @Last Modified time: 2019-02-04 18:43:03
+ * @Last Modified by:   Mchar
+ * @Last Modified time: 2019-02-08 15:34:45
  */
 
 namespace App\Controller;
@@ -17,6 +17,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class BlogController extends AbstractController
 {
@@ -29,6 +30,7 @@ class BlogController extends AbstractController
      * )
      */
     public function  index() {
+        return $this->redirectToRoute("sandwich_accueil");
         $urlListDefault = $this->generateUrl('blog_list');
         $urlList = $this->generateUrl('blog_list', ['page' => random_int(0,100)]);
         $urlShow = $this->generateUrl('blog_show', ['slug' => "pouetpoeut"]);
@@ -44,13 +46,12 @@ class BlogController extends AbstractController
      * Matches /blog exactly
      *
      * @Route(
-     *     "/blog/{page<\d+>?5}",
+     *     "/blog/{page<\d+>?15}",
      *     name="blog_list"
      * )
      */
     public function list($page)
     {
-        return $this->redirectToRoute('homepage');
         if (!isset($page)) {
             $page = 100;
         }
@@ -87,13 +88,14 @@ class BlogController extends AbstractController
      *      "_locale": "en|fr|ru",
      *      "_format": "html|rss",
      *      "year": "\d+"
-     *  }
+     *  },
+     * name="blog_advanced_show"
      * )
      */
     public function advanced_show(Request $request, $_locale, $year, $slug) {
 
        // redirects to a route and maintains the original query string parameters
-        return $this->redirectToRoute('blog_show', ["slug" => implode("-", $request->query->all())]);
+        // return $this->redirectToRoute('blog_show', ["slug" => implode("-", $request->query->all())]);
 
         return new Response("
             <p> _locale = {$_locale} </p>
@@ -110,6 +112,8 @@ class BlogController extends AbstractController
      */
     public function about(LoggerInterface $logger)
     {
+        dump($logger);
+
         $logger->info("je log sa maman !");
         $logger->error("ouh la mechante erreur !");
         $logger->warning("ouh la mechante erreur !");
@@ -138,7 +142,7 @@ class BlogController extends AbstractController
      */
     public function testJson()
     {
-        return $this->json(["coucou" => "pouet"]);
+        return $this->json(["coucou" => "pouet", "coucou2" => ["pouet", "pouet", "pouet"]]);
     }
 
 
@@ -152,5 +156,69 @@ class BlogController extends AbstractController
     {
         $file = new File("monfichier.pdf");
         return $this->file($file, "nouveaunom.pdf", ResponseHeaderBag::DISPOSITION_INLINE);
+    }
+
+    /**
+     * @Route(
+     *     "/link",
+     *     name="blog_link"
+     * )
+     */
+    public function link(LoggerInterface $logger) {
+        $url = $this->generateUrl('blog_list', ['page' => 3]);
+        return $this->render("blog/link.html.twig", [
+            "url" => $url
+        ]);
+    }
+
+    /**
+     * @Route("/redirection")
+     */
+    public function redirection() {
+        return $this->redirectToRoute('blog_advanced_show', ["_locale" => "fr", "year" => 2009, "slug" => "pouetpouet"]);
+    }
+
+    /**
+     * @Route("/loglag", name="blog_log")
+     */
+    public function loglag(LoggerInterface $logger)
+    {
+        $logger->info("je log sa maman !");
+        $logger->error("ouh la mechante erreur !");
+        $logger->warning("ouh le mechant warning !");
+        return new Response("<html><body> LOG LAG </body></html>");
+    }
+
+    /**
+     * @Route("/request", name="blog_request")
+     */
+    public function request(Request $request)
+    {
+        $param = $request->query->get("pouet");
+        return new Response("<body>
+            <h4>{$param}</h4>
+        </body>");
+    }
+
+    /**
+     * @Route("/session", name="blog_session")
+     */
+    public function session(SessionInterface $session)
+    {
+        $session->set("pouet", "je suis contenu dans la session");
+        return $this->redirectToRoute("lucky_session");
+    }
+
+    /**
+     * @Route("/couleurs", name="blog_couleurs")
+     */
+    public function couleurs() {
+        $couleurList = ["bleu", "rouge", "vert"];
+        return $this->render("/blog/couleurs.html.twig", [
+            "name" => "Chapeau en toile à bords rabattus sur la calotte.",
+            "age" => 20,
+            "couleurList" => $couleurList,
+            "couleurString" => implode(",", $couleurList)
+        ]);
     }
 }
