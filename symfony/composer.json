@@ -26,6 +26,7 @@
         "symfony/yaml": "4.2.*"
     },
     "require-dev": {
+        "fzaninotto/faker": "^1.8",
         "symfony/debug-pack": "*",
         "symfony/maker-bundle": "^1.11",
         "symfony/profiler-pack": "*",
