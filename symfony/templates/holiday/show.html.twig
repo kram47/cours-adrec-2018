@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'base_holiday.html.twig' %}
 
 {% block title %} vacances {{ holiday.location}} {% endblock %}
 
@@ -11,7 +11,7 @@
 <div class="example-wrapper">
     <h1>Vacances</h1>
 
-    youhouuu je pars à {{holiday.location}} {{holiday.duration}} jours
+    youhouuu je pars à {{holiday.location}} {{holiday.duration}} jours avec {{holiday.peopleCount - 1}} personnes !
 
 </div>
 {% endblock %}
