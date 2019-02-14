@@ -9,13 +9,15 @@
 </style>
 
 <div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <h1>Hello {{ controller_name }}! </h1>
 
     <ul>
-
         {% for holiday in holidayList %}
 
             <li>
+                <a class="btn btn-primary" href="{{path('holiday_show', {'id' : holiday.id })}}"> show </a>
+                <a class="btn btn-success" href="{{path('holiday_edit', {'id' : holiday.id })}}"> edit </a>
+
                 mes vacances {{ holiday.location | upper }} dureront {{ holiday.duration }} jours et
                 {% if holiday.peopleCount > 1 %}
                     nous serons {{ holiday.peopleCount }}
@@ -25,7 +27,6 @@
             </li>
 
         {% endfor %}
-
     </ul>
 
 </div>

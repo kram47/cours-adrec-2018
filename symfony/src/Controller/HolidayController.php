@@ -9,6 +9,7 @@ use App\Repository\HolidayRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 
 class HolidayController extends AbstractController
 {
@@ -28,11 +29,13 @@ class HolidayController extends AbstractController
     }
 
     /**
-        * @Route("/holiday/{id<\d+>?1}", name="holiday_show")
+     * @Route("/holiday/{id<\d+>?}", name="holiday_show")
      */
-    public function show(HolidayRepository $repo, $id)
+    public function show(HolidayRepository $repo, Holiday $holiday = null)
     {
-        $holiday = $repo->findOneById($id);
+        if ($holiday == null) {
+            throw $this->createNotFoundException("ben oui connard ta variable holiday n'est pas trouvé, surement parceque tu as mis le mauvais ID");
+        }
         dump($holiday);
 
         return $this->render('holiday/show.html.twig', [
@@ -42,11 +45,13 @@ class HolidayController extends AbstractController
 
     /**
      * @Route("/holiday/new", name="holiday_create")
-     * @Route("/holiday/{id}/edit", name="holiday_edit")
+     * @Route("/holiday/{id<\d+>}/edit", name="holiday_edit")
      */
-    public function form(Holiday $holiday = null, Request $req, ObjectManager $manager)
+    public function form(Request $req, ObjectManager $manager, Holiday $holiday = null)
     {
-        if (!$holiday) {
+        dump($holiday);
+
+        if ($holiday == null) { // is null -> true , is not null -> false
             $holiday = new Holiday();
         }
 
@@ -57,28 +62,23 @@ class HolidayController extends AbstractController
                      ->getForm();
 
         $form->handleRequest($req);
-        if ($form->isSubmitted() && $form->isValid()) {
-            if (!$holiday->getId()) {
-                // date de creation
-            }
-            else {
-                // date de modification
-            }
 
+        if ($form->isSubmitted()) {
             $manager->persist($holiday);
             $manager->flush();
 
-            return $this->redirectToRoute("holiday_show",
-                ["id" => $holiday->getId()]
-            );
+            dump($holiday);
+
+            return $this->redirectToRoute("holiday_show", [
+                "id" => $holiday->getId()
+            ]);
         }
 
         return $this->render('holiday/create.html.twig', [
             "formHoliday" => $form->createView(),
-            "isEditMode" => $holiday->getId() !== null
+            "isEditMode" =>  $holiday->getId() !== null  // false -> creation, true -> modification
         ]);
     }
-
 
 
 
