@@ -4,8 +4,8 @@
 /**
  * @Author: OMAO
  * @Date:   2019-02-01 16:50:01
- * @Last Modified by:   Mchar
- * @Last Modified time: 2019-02-08 15:34:45
+ * @Last Modified by:   OMAO
+ * @Last Modified time: 2019-02-18 12:59:55
  */
 
 namespace App\Controller;
@@ -30,7 +30,7 @@ class BlogController extends AbstractController
      * )
      */
     public function  index() {
-        return $this->redirectToRoute("sandwich_accueil");
+        return $this->redirectToRoute("holiday_index");
         $urlListDefault = $this->generateUrl('blog_list');
         $urlList = $this->generateUrl('blog_list', ['page' => random_int(0,100)]);
         $urlShow = $this->generateUrl('blog_show', ['slug' => "pouetpoeut"]);
